@@ -1,9 +1,37 @@
 from flask import Flask, render_template, request, redirect, jsonify
 import requests
+import pymysql
+
 app = Flask(__name__)
 
 # app.config['KEY'] = '758b8aeba9ee4aecb775bc6d2a04d633'
 app.config['KEY'] = '966410e2ecfb9c91340fb765bedfc8c2'
+
+
+def git_adcode(name):
+    conn1 = pymysql.connect(host="localhost", port=3306, user="root",
+                            password="mysql", database="Utils_data",charset="utf8")
+
+
+    #数据库操作：读取句子：
+    cs = conn1.cursor()
+    # sql = "select adcode from ChinaArea_data where name like '%s\%';"%name  #TypeError: not enough arguments for format string
+    # #会被注入
+    #拼接字符串  引号 %
+    # name = "'"+name+"'"
+    name = "'%"+name+"%'"  #某些地名会搜两个不同的adcode
+    sql = "select adcode from ChinaArea_data where name like %s;" %name
+    # sql = "select *from tb_aphorism where id=2;"
+    cs.execute(sql)
+    data = cs.fetchall()  # 是一个元组
+    # data1 = cs.fetchone()
+    cs.close()
+    conn1.close()
+
+    #返回句子
+    return data[0][0] #某些地名会搜两个不同的adcode,取第一个
+
+
 
 @app.route('/')
 def index():
@@ -20,7 +48,7 @@ https://restapi.amap.com/v3/weather/weatherInfo?city=110101&key=<用户key>
 def get_weather():
     city = request.form.get('city')
     print('city:%s'%city)
-    city_adcode ='440106'
+    city_adcode =git_adcode(city)
 
     return redirect('/show_weather?' + '&city_adcode=' + city_adcode)
 
