@@ -1,13 +1,44 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, jsonify
 import requests
 app = Flask(__name__)
 
 # app.config['KEY'] = '758b8aeba9ee4aecb775bc6d2a04d633'
 app.config['KEY'] = '966410e2ecfb9c91340fb765bedfc8c2'
 
-@app.route('/map')
-def map():
-    return render_template('map_test01.html')
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+
+'''
+URL:https://restapi.amap.com/v3/weather/weatherInfo?parameters
+
+请求方式GET
+https://restapi.amap.com/v3/weather/weatherInfo?city=110101&key=<用户key>
+'''
+@app.route('/get_weather', methods=['POST'])
+def get_weather():
+    city = request.form.get('city')
+    print('city:%s'%city)
+    city_adcode ='440106'
+
+    return redirect('/show_weather?' + '&city_adcode=' + city_adcode)
+
+@app.route('/show_weather')
+def show_weather():
+    city_adcode = request.args.get('city_adcode')
+    weather_url = 'https://restapi.amap.com/v3/weather/weatherInfo?city=' + city_adcode + '&key=' + app.config['KEY']
+    # return jsonify(weather_url=weather_url)
+    # return render_template('map_test02.html', weather_url=weather_url)
+    response = requests.get(weather_url)
+    json_data = response.json()
+    return jsonify(weather_data=json_data)  #注意转码
+'''
+{"weather_data":{"count":"1","info":"OK","infocode":"10000","lives":[{"adcode":"440607","city":"\u4e09\u6c34\u533a",
+"humidity":"83","province":"\u5e7f\u4e1c","reporttime":"2019-07-20 19:46:02","temperature":"27","weather":"\u9634",
+"winddirection":"\u897f\u5357","windpower":"\u22643"}],"status":"1"}}
+'''
+
 
 @app.route('/get_form', methods=['POST'])
 def get_data():
@@ -24,13 +55,13 @@ def show_map():
     area = request.args.get('area')
     detail = request.args.get('detail')
     address = 'address=' + province + city + area + detail
-
+    #获取城市编码
     url = 'https://restapi.amap.com/v3/geocode/geo?' + address + '&key=' + app.config['KEY']
     response = requests.get(url)
     json_data = response.json()
     location = json_data['geocodes'][0]['location']
     # print(location)
-    map_url = 'https://restapi.amap.com/v3/staticmap?zoom=15&size=750*500&markers=mid,,A:' + location + '&location=' + location + '&key=' + app.config['KEY']
+    map_url = 'https://restapi.amap.com/v3/staticmap?zoom=13&size=750*750&markers=mid,,A:' + location + '&location=' + location + '&key=' + app.config['KEY']
 
     return render_template('map_test02.html', map_url=map_url)
 

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hello</title>
+    <style>
+         h1{
+         color:blue;    /*设置文字的颜色*/
+            /*font-weight: bold;  设置文字加粗*/
+            font-size: 20px;  /*设置文字大小*/
+     }
+
+    </style>
+
+</head>
+<body>
+
+<h1>静态地图</h1>
+<form method="post" action="/get_form">
+    <label for="">省、自治区、直辖市</label><br>
+    <input type="text" name="province"><br><br>
+    <label for="">地级市</label><br>
+    <input type="text" name="city"><br><br>
+    <label for="">县、区</label><br>
+    <input type="text" name="area"><br><br>
+    <label for="">详细</label><br>
+    <input type="text" name="detail"><br><br>
+
+    <input type="submit" >
+    <input type="reset">
+
+</form>
+
+<h1>天气查询</h1>
+<form method="post" action="/get_weather">
+
+    <label for="">城市</label><br>
+    <input type="text" name="city"><br><br>
+
+    <input type="submit" >
+    <input type="reset">
+
+</form>
+
+<h1>{{ weather_data }}</h1>
+
+
+
+</body>
+</html>
