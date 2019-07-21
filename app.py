@@ -13,7 +13,7 @@ def git_adcode(name):
                             password="mysql", database="Utils_data",charset="utf8")
 
 
-    #数据库操作：读取句子：
+    #数据库操作：读取城市编码表：
     cs = conn1.cursor()
     # sql = "select adcode from ChinaArea_data where name like '%s\%';"%name  #TypeError: not enough arguments for format string
     # #会被注入
@@ -28,7 +28,7 @@ def git_adcode(name):
     cs.close()
     conn1.close()
 
-    #返回句子
+    #返回 adcode
     return data[0][0] #某些地名会搜两个不同的adcode,取第一个
 
 
@@ -89,7 +89,7 @@ def show_map():
     json_data = response.json()
     location = json_data['geocodes'][0]['location']
     # print(location)
-    map_url = 'https://restapi.amap.com/v3/staticmap?zoom=13&size=750*750&markers=mid,,A:' + location + '&location=' + location + '&key=' + app.config['KEY']
+    map_url = 'https://restapi.amap.com/v3/staticmap?zoom=17&size=950*950&markers=mid,,A:' + location + '&location=' + location + '&key=' + app.config['KEY']
 
     return render_template('map_test02.html', map_url=map_url)
 
