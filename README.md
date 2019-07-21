@@ -17,7 +17,7 @@ def git_adcode(name):
 	data = cs.fetchall()  # 是一个元组
 	cs.close()
 	conn1.close()
-#返回 adcode
-return data[0][0] #某些地名会搜两个不同的adcode,取第一个
+    #返回 adcode
+    return data[0][0] #某些地名会搜两个不同的adcode,取第一个
 ```
 
